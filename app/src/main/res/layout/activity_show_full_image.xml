@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+   <!-- <ImageView
+        android:id="@+id/iv_full_image"
+        android:src="@color/sky_blue"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />-->
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/view_pager_full_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <ImageView
+        android:background="@drawable/ic_cancel_black_24dp"
+        android:layout_margin="12dp"
+        android:id="@+id/iv_cancel"
+        android:layout_width="42dp"
+        android:layout_height="42dp" />
+
+</FrameLayout>

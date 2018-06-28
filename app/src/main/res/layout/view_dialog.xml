@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="8dp">
+
+    <TextView
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textColor="@color/black"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/tv_select"
+        android:layout_alignParentTop="true"
+        android:text="Select Image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+
+    <TextView
+        android:layout_below="@+id/tv_select"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/tv_gallery"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="6dp"
+        android:text="Gallery"
+        android:textSize="16dp" />
+
+    <TextView
+        android:layout_centerHorizontal="true"
+        android:id="@+id/tv_camera"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_gallery"
+        android:padding="6dp"
+        android:text="Camera"
+        android:textSize="16dp" />
+
+</RelativeLayout>

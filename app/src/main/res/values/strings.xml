@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">CreateFolder</string>
+    <string name="pref_image_file">PREF_IMAGE_FILE</string>
+</resources>
