@@ -17,14 +17,6 @@
         android:layout_height="wrap_content"
         android:text="AddFolder" />
 
-<!--    <TextView
-        android:id="@+id/empty"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/txtItem"
-        android:gravity="center_horizontal"
-        android:text="txtEmpty" />-->
-
     <GridView
         android:layout_below="@+id/btnAdd"
         android:id="@+id/list"
