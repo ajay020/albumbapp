@@ -3,6 +3,7 @@ package project.gallery.com.createfolder;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -40,6 +41,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private String folder_name;
     private boolean isPause = false;
     private boolean isBackPressed = false;
+    private boolean isPasswordMatched = false;
     private Button btnEditPassword;
     private final static String PASSWORD_KEY = "password_key";
 
@@ -85,18 +87,73 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         Alert1 = alert.create();
         Alert1.show();
         Alert1.setCancelable(true);
-        Button btnEdit = (Button) Alert1.findViewById(R.id.btn_edit_popup);
-        final EditText editText = (EditText) Alert1.findViewById(R.id.et_edit_password_popup);
-        String password = getPasswordFromPref();
-        editText.setText(password);
+        final Button btnEdit = (Button) Alert1.findViewById(R.id.btn_edit_popup);
+        final EditText editTextOldPassword = (EditText) Alert1.findViewById(R.id.et_old_password_popup);
+        final EditText editTextNewPassword = (EditText) Alert1.findViewById(R.id.et_new_password_popup);
+        final EditText editTextConformPassword = (EditText) Alert1.findViewById(R.id.et_conform_new_password_popup);
+        final String oldSavedPassword = getPasswordFromPref();
+        // editText.setText(oldPassword);
         btnEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (editText.getText().toString().length() > 0) {
-                    savePasswordIntoPreference(editText.getText().toString());
-                }
-                Alert1.dismiss();
+                String oldPassword = editTextOldPassword.getText().toString().trim();
+                String newPassword = editTextNewPassword.getText().toString().trim();
+                String conformPassword = editTextConformPassword.getText().toString().trim();
+                /*if (isPasswordMatched) {
+                    if (editText.getText().toString().trim().length() > 0) {
+                        savePasswordIntoPreference(editText.getText().toString().trim());
+                        Alert1.dismiss();
+                    } else {
+                        Toast.makeText(getApplicationContext(), "password is empty", Toast.LENGTH_SHORT).show();
+                    }
+                }*/
 
+                if (oldSavedPassword.equals(oldPassword)) {
+                    if (newPassword.equals(conformPassword) ) {
+                        if (newPassword.length() == 4 && conformPassword.length() == 4) {
+                            savePasswordIntoPreference(editTextNewPassword.getText().toString().trim());
+                            Alert1.dismiss();
+                        } else {
+                            Toast.makeText(getApplicationContext(),"password length must be 4",Toast.LENGTH_SHORT).show();
+                            editTextNewPassword.getText().clear();
+                            editTextConformPassword.getText().clear();
+                        }
+                    } else {
+                        btnEdit.setText("Wrong Conform Password");
+                      //  clearEditText();
+                        editTextNewPassword.getText().clear();
+                        editTextConformPassword.getText().clear();
+
+                        editTextOldPassword.setFocusableInTouchMode(true);
+                        Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                btnEdit.setText("Edit Password");
+                            }
+                        }, 2000);
+
+                    }
+
+                } else {
+                    btnEdit.setText("Wrong Password");
+                    clearEditText();
+                    Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            btnEdit.setText("Edit password");
+
+                        }
+                    }, 2000);
+//                    Alert1.dismiss();
+                }
+            }
+
+            private void clearEditText() {
+                editTextOldPassword.getText().clear();
+                editTextNewPassword.getText().clear();
+                editTextConformPassword.getText().clear();
             }
         });
     }
@@ -168,14 +225,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     protected void onResume() {
         super.onResume();
-        Toast.makeText(getApplicationContext(), "OnResume main activity = " + isPause, Toast.LENGTH_SHORT).show();
+        // Toast.makeText(getApplicationContext(), "OnResume main activity = " + isPause, Toast.LENGTH_SHORT).show();
 
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        Toast.makeText(getApplicationContext(), "OnStart main activity", Toast.LENGTH_SHORT).show();
+        // Toast.makeText(getApplicationContext(), "OnStart main activity", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -186,14 +243,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     protected void onStop() {
         super.onStop();
-        Toast.makeText(getApplicationContext(), "OnStop main activity", Toast.LENGTH_SHORT).show();
+        // Toast.makeText(getApplicationContext(), "OnStop main activity", Toast.LENGTH_SHORT).show();
 
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
-        Toast.makeText(getApplicationContext(), "OnRestart main activity", Toast.LENGTH_SHORT).show();
+        //  Toast.makeText(getApplicationContext(), "OnRestart main activity", Toast.LENGTH_SHORT).show();
         getFolderNameFromPreference();
         gridAdapter.notifyDataSetChanged();
 
@@ -207,14 +264,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Toast.makeText(getApplicationContext(), "OnBackPressed main activity", Toast.LENGTH_SHORT).show();
+        //  Toast.makeText(getApplicationContext(), "OnBackPressed main activity", Toast.LENGTH_SHORT).show();
         isBackPressed = true;
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Toast.makeText(getApplicationContext(), "OnDestroy main activity", Toast.LENGTH_SHORT).show();
+        // Toast.makeText(getApplicationContext(), "OnDestroy main activity", Toast.LENGTH_SHORT).show();
     }
 
     @Override
