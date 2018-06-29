@@ -27,7 +27,7 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener,
         AdapterView.OnItemLongClickListener {
-    ArrayList<String> folderNameList = new ArrayList<String>();
+    ArrayList<FolderModel> folderNameList = new ArrayList<>();
     private CustomGridAdapter gridAdapter;
     /**
      * Declaring an ArrayAdapter to set items to ListView
@@ -40,8 +40,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private static String folder_name_key = "folder_list";
     private String folder_name;
     private boolean isPause = false;
-    private boolean isBackPressed = false;
-    private boolean isPasswordMatched = false;
     private Button btnEditPassword;
     private final static String PASSWORD_KEY = "password_key";
 
@@ -99,14 +97,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 String oldPassword = editTextOldPassword.getText().toString().trim();
                 String newPassword = editTextNewPassword.getText().toString().trim();
                 String conformPassword = editTextConformPassword.getText().toString().trim();
-                /*if (isPasswordMatched) {
-                    if (editText.getText().toString().trim().length() > 0) {
-                        savePasswordIntoPreference(editText.getText().toString().trim());
-                        Alert1.dismiss();
-                    } else {
-                        Toast.makeText(getApplicationContext(), "password is empty", Toast.LENGTH_SHORT).show();
-                    }
-                }*/
 
                 if (oldSavedPassword.equals(oldPassword)) {
                     if (newPassword.equals(conformPassword) ) {
@@ -179,9 +169,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         Gson gson = new Gson();
         String json = prefs.getString(folder_name_key, null);
 
-        Type type = new TypeToken<ArrayList<String>>() {
+        Type type = new TypeToken<ArrayList<FolderModel>>() {
         }.getType();
-        ArrayList<String> arrayList = gson.fromJson(json, type);
+        ArrayList<FolderModel> arrayList = gson.fromJson(json, type);
         if (arrayList != null) {
             folderNameList.clear();
             folderNameList.addAll(arrayList);
@@ -209,7 +199,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             public void onClick(View v) {
                 if (edit.getText().length() != 0) {
                     folder_name = edit.getText().toString().trim();
-                    saveFolderNameInToPreference(edit.getText().toString().trim());
+                    FolderModel folderObj = new FolderModel();
+                    folderObj.setFolderName(edit.getText().toString().trim());
+                    saveFolderNameInToPreference(folderObj);
 
                 } else {
                     Toast.makeText(getApplicationContext(), "Folder Name Empty", Toast.LENGTH_SHORT).show();
@@ -225,14 +217,13 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     protected void onResume() {
         super.onResume();
-        // Toast.makeText(getApplicationContext(), "OnResume main activity = " + isPause, Toast.LENGTH_SHORT).show();
-
+         //Toast.makeText(getApplicationContext(), "OnResume main activity = " + isPause, Toast.LENGTH_SHORT).show();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        // Toast.makeText(getApplicationContext(), "OnStart main activity", Toast.LENGTH_SHORT).show();
+         //Toast.makeText(getApplicationContext(), "OnStart main activity", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -243,35 +234,32 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     protected void onStop() {
         super.onStop();
-        // Toast.makeText(getApplicationContext(), "OnStop main activity", Toast.LENGTH_SHORT).show();
-
+         //Toast.makeText(getApplicationContext(), "OnStop main activity", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
-        //  Toast.makeText(getApplicationContext(), "OnRestart main activity", Toast.LENGTH_SHORT).show();
+          //Toast.makeText(getApplicationContext(), "OnRestart main activity", Toast.LENGTH_SHORT).show();
         getFolderNameFromPreference();
         gridAdapter.notifyDataSetChanged();
 
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
         finish();
-
     }
-
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        //  Toast.makeText(getApplicationContext(), "OnBackPressed main activity", Toast.LENGTH_SHORT).show();
-        isBackPressed = true;
+         // Toast.makeText(getApplicationContext(), "OnBackPressed main activity", Toast.LENGTH_SHORT).show();
+
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        // Toast.makeText(getApplicationContext(), "OnDestroy main activity", Toast.LENGTH_SHORT).show();
+         //Toast.makeText(getApplicationContext(), "OnDestroy main activity", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -292,30 +280,28 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         return super.onOptionsItemSelected(item);
     }
 
-    private void saveFolderNameInToPreference(String folderName) {
+    private void saveFolderNameInToPreference(FolderModel folderModel) {
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = prefs.edit();
         Gson gson = new Gson();
-        folderNameList.add(folderName);
+        folderNameList.add(folderModel);
 
         String json = gson.toJson(folderNameList);
         editor.putString(folder_name_key, json);
         editor.apply();
     }
 
-
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
         Intent intent = new Intent(this, AddImageActivity.class);
 
-        intent.putExtra("FOLDER_TITLE", folderNameList.get(position));
+        intent.putExtra("FOLDER_TITLE", String.valueOf(folderNameList.get(position).getFolderId()));
         if (isLongClick == false) {
             startActivity(intent);
         }
         isLongClick = false;
     }
-
 
     @Override
     public boolean onItemLongClick(AdapterView<?> adapterView, View view, final int position, long l) {
@@ -364,10 +350,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         SharedPreferences.Editor editor = prefs.edit();
         Gson gson = new Gson();
         String json = prefs.getString(folder_name_key, null);
-        editor.remove(folderNameList.get(position));
-        Type type = new TypeToken<ArrayList<String>>() {
+       // editor.remove(folderNameList.get(position));
+        Type type = new TypeToken<ArrayList<FolderModel>>() {
         }.getType();
-        ArrayList<String> arrayList = gson.fromJson(json, type);
+        ArrayList<FolderModel> arrayList = gson.fromJson(json, type);
         if (arrayList != null) {
             arrayList.remove(position);
             String jsonStr = gson.toJson(arrayList);

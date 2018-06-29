@@ -12,11 +12,11 @@ import java.util.ArrayList;
 
 public class CustomGridAdapter extends BaseAdapter {
 
-    private ArrayList<String> folderNameList;
+    private ArrayList<FolderModel> folderNameList;
     private Context context;
     private LayoutInflater inflater;
 
-    public CustomGridAdapter(Context context, ArrayList<String> folderNameList) {
+    public CustomGridAdapter(Context context, ArrayList<FolderModel> folderNameList) {
         this.folderNameList = folderNameList;
         this.context = context;
         inflater = LayoutInflater.from(context);
@@ -50,7 +50,7 @@ public class CustomGridAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        holder.textViewFolderName.setText(folderNameList.get(position));
+        holder.textViewFolderName.setText(folderNameList.get(position).getFolderName());
         return convertView;
     }
 

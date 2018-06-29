@@ -26,7 +26,7 @@ public class EditFolderActivity extends AppCompatActivity implements AdapterView
     GridView gridView;
     CustomGridAdapter adapter;
     private static String folder_name_key = "folder_list";
-    ArrayList<String> folderNameList = new ArrayList<String>();
+    ArrayList<FolderModel> folderNameList = new ArrayList<>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -52,14 +52,15 @@ public class EditFolderActivity extends AppCompatActivity implements AdapterView
         Alert1.setCancelable(true);
         Button btnEdit = (Button) Alert1.findViewById(R.id.btn_edit_folder_name);
         edit = (EditText) Alert1.findViewById(R.id.et_folder_name);
-        edit.setText(folderNameList.get(position));
+        edit.setText(folderNameList.get(position).getFolderName());
         btnEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (edit.getText().length() != 0) {
-
-                    saveFolderNameInToPreference(edit.getText().toString().trim(),position);
-//                     adapter.notifyDataSetChanged();
+                    FolderModel folderObj = folderNameList.get(position);
+                    folderObj.setFolderName(edit.getText().toString().trim());
+                    saveFolderNameInToPreference(folderObj,position);
+                   //  adapter.notifyDataSetChanged();
                     finish();
                 } else {
                     Toast.makeText(getApplicationContext(), "Folder Name Empty", Toast.LENGTH_SHORT).show();
@@ -69,12 +70,12 @@ public class EditFolderActivity extends AppCompatActivity implements AdapterView
         });
     }
 
-    private void saveFolderNameInToPreference(String folderName, int position) {
+    private void saveFolderNameInToPreference(FolderModel folderObj, int position) {
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = prefs.edit();
         Gson gson = new Gson();
-        folderNameList.set(position,folderName);
+        folderNameList.set(position,folderObj);
 
         String json = gson.toJson(folderNameList);
         editor.putString(folder_name_key, json);
@@ -87,9 +88,9 @@ public class EditFolderActivity extends AppCompatActivity implements AdapterView
         Gson gson = new Gson();
         String json = prefs.getString(folder_name_key, null);
 
-        Type type = new TypeToken<ArrayList<String>>() {
+        Type type = new TypeToken<ArrayList<FolderModel>>() {
         }.getType();
-        ArrayList<String> arrayList = gson.fromJson(json, type);
+        ArrayList<FolderModel> arrayList = gson.fromJson(json, type);
         if (arrayList != null) {
             folderNameList.addAll(arrayList);
 
@@ -101,6 +102,7 @@ public class EditFolderActivity extends AppCompatActivity implements AdapterView
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        Toast.makeText(this, "EditFolderActivity's onback pressed", Toast.LENGTH_LONG).show();
         finish();
     }
 }
